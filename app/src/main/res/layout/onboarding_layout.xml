@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="26dp"
+    android:paddingTop="26dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:text="@string/choose_time" />
+
+    <RelativeLayout
+        android:id="@+id/setup_focus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:gravity="center"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/black_30"
+            android:layout_height="48dp"/>
+
+        <TextView
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="3dp"
+            android:paddingBottom="8dp"
+            android:text="@string/Start"
+            android:layout_toStartOf="@id/divider"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/start"
+            android:layout_alignStart="@id/start"
+            android:paddingBottom="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:text="10:00" />
+
+        <TextView
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/start"
+            android:layout_toEndOf="@id/divider"
+            android:paddingStart="3dp"
+            android:paddingBottom="8dp"
+            android:text="@string/End"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/end"
+            android:layout_alignTop="@id/start_time"
+            android:paddingBottom="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:text="19:00" />
+
+
+        <ca.antonious.materialdaypicker.MaterialDayPicker
+            android:id="@+id/day_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_below="@id/end_time" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="36dp"
+        android:padding="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:background="@drawable/ripple_bg"
+        android:text="@string/done" />
+
+
+</RelativeLayout>

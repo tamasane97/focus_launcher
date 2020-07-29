@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white_30">#1AFFFFFF</color>
+    <color name="black_30">#B3000000</color>
+    <color name="black_10">#1A000000</color>
+    <color name="red">@android:color/holo_red_light</color>
+    <color name="green">@android:color/holo_green_dark</color>
+    <color name="blue">@android:color/holo_blue_light</color>
+    <color name="yellow">#A9A74C</color>
+    <color name="ripple">#A1F2F3F4</color>
+</resources>

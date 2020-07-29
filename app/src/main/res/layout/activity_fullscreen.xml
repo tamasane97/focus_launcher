@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    app:layout_behavior="com.example.easyapps.focusmode.launcher.AppDrawerBehaviour"
+    tools:context=".LauncherActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true" />
+
+        <FrameLayout
+            android:id="@+id/content_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/status_bar"
+            android:layout_alignParentBottom="true"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
+
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

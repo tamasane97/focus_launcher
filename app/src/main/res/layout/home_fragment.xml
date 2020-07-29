@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
+        android:id="@+id/circular_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        app:direction="clockwise"
+        app:dotWidth="15dp"
+        app:drawDot="true"
+        app:enableProgressAnimation="true"
+        app:progressBackgroundStrokeWidth="12dp"
+        app:progressCap="round"
+        app:gradientType="linear"
+        app:progressBackgroundColor="#A1F2F3F4"
+        app:progressColor="@color/green"
+        app:gradientEndColor="@color/blue"
+        app:textSize="60sp"
+        app:textColor="@android:color/transparent"
+        app:progressStrokeWidth="14dp" />
+
+    <TextClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black_30"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/circular_progress"
+        android:layout_alignBottom="@id/circular_progress"
+        android:layout_alignStart="@id/circular_progress"
+        android:layout_alignEnd="@id/circular_progress"
+        tools:text="12:30"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textSize="60sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/settings"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp" />
+
+    <include
+        android:id="@+id/dialer"
+        layout="@layout/launcher_item"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true" />
+
+    <include
+        android:id="@+id/settings"
+        layout="@layout/launcher_item"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
