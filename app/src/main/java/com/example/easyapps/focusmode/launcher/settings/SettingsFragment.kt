@@ -2,10 +2,14 @@ package com.example.easyapps.focusmode.launcher.settings
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,6 +24,7 @@ class SettingsFragment : Fragment() {
 
 
     private lateinit var interaction: Interaction
+    private val REQ_CODE = 100;
     private val sharedVm: AppInfoViewModel by activityViewModels {
         AppInfoVMFactory(activity!!.application)
     }
@@ -55,7 +60,7 @@ class SettingsFragment : Fragment() {
 
     private fun initViews(view: View) {
         view.findViewById<TextView>(R.id.app_drawer).setOnClickListener {
-            interaction.openAppDrawer()
+            interaction.openAppDrawerForSelection()
         }
 
         view.findViewById<TextView>(R.id.make_default).setOnClickListener {
@@ -78,12 +83,33 @@ class SettingsFragment : Fragment() {
         view.findViewById<TextView>(R.id.end_time).setOnClickListener {
             openTimePicker(false)
         }
+
+        val remindFocus = view.findViewById<Switch>(R.id.remind_focus_lost)
+        remindFocus.isChecked = Utils.getRemindMeOption(view.context)
+
+
+        remindFocus.setOnCheckedChangeListener { compoundButton: CompoundButton, checked: Boolean ->
+            if (checked && !Utils.isUsagePermissionGranted(view.context)) {
+                val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivityForResult(intent, REQ_CODE)
+            }
+            Utils.saveRemindMeOption(view.context, checked)
+        }
+
         val daypicker = view.findViewById<MaterialDayPicker>(R.id.day_picker);
         daypicker.setDaySelectionChangedListener {
             Utils.saveSelectedDays(view.context, daypicker.selectedDays)
             sharedVm.updateCurrentProgress(view.context)
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_CODE && !Utils.isUsagePermissionGranted(activity!!.applicationContext)) {
+
+        }
     }
 
     private fun setFocusTime(view: View) {
@@ -122,7 +148,7 @@ class SettingsFragment : Fragment() {
     }
 
     interface Interaction {
-        fun openAppDrawer();
+        fun openAppDrawerForSelection();
     }
 
 }

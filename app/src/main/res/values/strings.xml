@@ -8,9 +8,17 @@
     <string name="system_settings">Device Settings</string>
     <string name="App_Drawer">App Drawer</string>
     <string name="Focus_time">Focus Time</string>
+    <string name="focus_lost">Remind me Lost Focus</string>
     <string name="choose_time">Choose your Focus Time</string>
     <string name="done">Done</string>
     <string name="Start">Start</string>
     <string name="End">End</string>
+    <string name="notification_title">Focus Time</string>
+    <string name="notification_message">Allow us to help you while focus</string>
+    <string name="ticker_text">Remind me</string>
+    <string name="take_me_back">Take me Back</string>
+    <string name="focus_message">You are in focus hours for the day. It\'s good to be focused at this time ?</string>
+    <string name="snooze">snooze</string>
+    <string name="always_allow_this_app">Always Allow this app</string>
 
 </resources>

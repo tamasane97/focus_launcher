@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/focus_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/focus_message" />
+
+        <TextView
+            android:id="@+id/exception"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/message"
+            android:padding="8dp"
+            android:text="@string/always_allow_this_app" />
+
+        <TextView
+            android:id="@+id/snooze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/take_back"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@+id/take_back"
+            android:padding="8dp"
+            android:text="@string/snooze" />
+
+        <TextView
+            android:id="@+id/take_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/exception"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:padding="8dp"
+            android:text="@string/take_me_back" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

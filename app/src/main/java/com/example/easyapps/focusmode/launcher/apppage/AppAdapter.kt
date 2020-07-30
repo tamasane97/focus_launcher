@@ -41,7 +41,7 @@ class AppAdapter(val set: MutableSet<AppDrawerInfo>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val appInfo = appInfoSet.elementAt(position)
         holder.bind(appInfo)
-        val isSelected = selectedAppList.contains(appInfo)
+        val isSelected = selectedAppList.contains(AppDrawerInfo(appInfo.appInfo,true))
         holder.updateCheckBoxVisibility(isSelected)
         holder.itemView.setOnClickListener {
             if (!holder.checkBox.isChecked && selectedAppList.count() >= 6) {

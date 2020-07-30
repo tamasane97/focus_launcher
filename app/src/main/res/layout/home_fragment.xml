@@ -58,6 +58,15 @@
         android:layout_alignParentBottom="true" />
 
     <include
+        android:id="@+id/drawer"
+        layout="@layout/launcher_item"
+        android:layout_width="100dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" />
+
+    <include
         android:id="@+id/settings"
         layout="@layout/launcher_item"
         android:layout_width="100dp"

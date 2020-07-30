@@ -1,6 +1,7 @@
 package com.example.easyapps.focusmode.launcher
 
 import android.content.Context
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(view)
+        sharedVM.updateCurrentProgress(view.context)
         setupClock(view)
     }
 
@@ -84,9 +86,26 @@ class HomeFragment : Fragment() {
     private fun initBottomBar(view: View) {
         val dialer = view.findViewById<View>(R.id.dialer)
         val settings = view.findViewById<View>(R.id.settings)
+        val drawer = view.findViewById<View>(R.id.drawer)
 
         setDialer(dialer, Utils.getDialerAppInfo(view.context))
         setSettingsApps(settings)
+        setDrawerIcon(drawer)
+    }
+
+    private fun setDrawerIcon(drawer: View?) {
+        sharedVM.currentProgress.observe(this, Observer {
+            if (it >= 100) {
+                drawer!!.visibility = View.VISIBLE
+                drawer.findViewById<ImageView>(R.id.icon)
+                    .setImageResource(R.drawable.ic_apps_black_40dp)
+                drawer.setOnClickListener {
+                    interaction.openAppDrawer()
+                }
+            } else {
+                drawer!!.visibility = View.GONE
+            }
+        })
     }
 
     private fun setDialer(view: View, appInfo: AppDrawerInfo?) {
@@ -111,6 +130,8 @@ class HomeFragment : Fragment() {
     interface Interaction {
 
         fun openSettingsPage();
+
+        fun openAppDrawer()
     }
 
 }

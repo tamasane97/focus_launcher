@@ -1,12 +1,16 @@
 package com.example.easyapps.focusmode.launcher
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import com.example.easyapps.focusmode.launcher.apppage.AppDrawerFragment
 import com.example.easyapps.focusmode.launcher.apppage.AppFragment
 import com.example.easyapps.focusmode.launcher.settings.OnBoardingFragment
 import com.example.easyapps.focusmode.launcher.settings.SettingsFragment
+import com.example.easyapps.focusmode.launcher.usage.ReadAppStateService
+import com.example.easyapps.focusmode.launcher.utils.FocusUtil
 import com.example.easyapps.focusmode.launcher.utils.Utils
 import com.example.easyapps.focusmode.launcher.viewModel.AppInfoVMFactory
 import com.example.easyapps.focusmode.launcher.viewModel.AppInfoViewModel
@@ -18,16 +22,18 @@ import com.example.easyapps.focusmode.launcher.viewModel.AppInfoViewModel
 class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
     SettingsFragment.Interaction, OnBoardingFragment.Interaction {
 
+    private val appInfoViewModel: AppInfoViewModel by viewModels {
+        AppInfoVMFactory(application)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fullscreen)
+
         if (Utils.isFirstRun(this)) {
             openOnBoardingFragment()
         } else {
-            val appInfoVm: AppInfoViewModel by viewModels {
-                    AppInfoVMFactory(application)
-            }
-            appInfoVm.startTicking()
+            appInfoViewModel.startTicking()
             addLauncherFragment()
         }
     }
@@ -56,19 +62,45 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
 
     override fun openLauncherWithDrawer() {
         addLauncherFragment()
-        openAppDrawer()
+        openAppDrawerForSelection()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        onLauncherStarted()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        startService(Intent(this, ReadAppStateService::class.java))
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        onLauncherStarted()
+    }
+
+    fun onLauncherStarted() {
+        stopService(Intent(this, ReadAppStateService::class.java))
+        FocusUtil.clearReminderNotification(this)
     }
 
 
-    /*override fun onBackPressed() {
+    override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
         }
-    }*/
-
-    override fun openAppDrawer() {
-        AppFragment.show(supportFragmentManager, "App_Drawer")
     }
 
+    override fun openAppDrawerForSelection() {
+        AppFragment.show(supportFragmentManager, "App_Drawer_selection")
+    }
 
+    override fun openAppDrawer() {
+        supportFragmentManager.commit(allowStateLoss = true) {
+            val fragment = AppDrawerFragment.createAppDrawer();
+            replace(R.id.content_holder, fragment)
+            addToBackStack(null)
+        }
+    }
 }

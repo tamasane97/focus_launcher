@@ -1,5 +1,6 @@
 package com.example.easyapps.focusmode.launcher.utils
 
+import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.edit
@@ -20,12 +21,15 @@ class Utils {
 
         private const val SHARED_PREF = "LAUNCHER_DEFAULT_SP"
         private const val SELECTED_APPS = "Selectedapps"
+        private const val EXCEPTION_APPS = "ExceptionApp"
         private const val START_HOUR = "starthour"
         private const val START_MIN = "startmin"
         private const val END_HOUR = "endhour"
         private const val END_MIN = "endmin"
         private const val SELECTED_DAYS = "selecteddays"
         private const val RUN_COUNT = "run"
+        private const val REMIND_ME = "remind_me"
+        const val PACKAGE_NAME = "package_name"
 
 
         fun getAllAppsForDrawer(
@@ -75,6 +79,8 @@ class Utils {
                     context
                 )
             )
+            packageset.remove(getSettings(context))
+            packageset.remove(context.packageName)
             val list = packageset.mapNotNull {
                 getAppInfoPkgName(
                     context,
@@ -83,6 +89,65 @@ class Utils {
             }
             return LinkedHashSet(list)
         }
+
+        fun getExhaustiveSelectedApps(context: Context): LinkedHashSet<AppDrawerInfo> {
+            val packageset =
+                context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).getStringSet(
+                    SELECTED_APPS, null
+                ) ?: linkedSetOf()
+
+            packageset.addAll(getExceptionList(context))
+
+            val list = packageset.mapNotNull {
+                getAppInfoPkgName(
+                    context,
+                    it
+                )
+            }
+            return LinkedHashSet(list)
+        }
+
+        fun addExceptionPackage(context: Context, packageName: String) {
+            val packageSet =
+                context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).getStringSet(
+                    EXCEPTION_APPS, null
+                ) ?: linkedSetOf()
+
+            packageSet.add(packageName)
+
+            context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).edit {
+                putStringSet(EXCEPTION_APPS, packageSet)
+            }
+
+        }
+
+        fun getExceptionList(context: Context): Set<String> {
+            val packageSet =
+                context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).getStringSet(
+                    EXCEPTION_APPS, null
+                ) ?: linkedSetOf()
+
+            packageSet.add(
+                getDialer(
+                    context
+                )
+            )
+            packageSet.add(
+                getSettings(
+                    context
+                )
+            )
+            packageSet.add(context.packageName)
+            packageSet.add(
+                getPackageForIntent(
+                    context,
+                    Intent(ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                )
+            )
+            packageSet.addAll(getDefaultOrAllPackagesForIntent(context, Intent(Intent.ACTION_CALL)))
+            return packageSet
+        }
+
 
         fun getDialer(context: Context): String {
             val dialingIntent = Intent(Intent.ACTION_DIAL).addCategory(Intent.CATEGORY_DEFAULT)
@@ -97,6 +162,51 @@ class Utils {
             }
             return resolveInfoList[0].activityInfo.packageName
         }
+
+        fun getSettings(context: Context): String {
+            val dialingIntent =
+                Intent(Settings.ACTION_SETTINGS).addCategory(Intent.CATEGORY_DEFAULT)
+            val resolveInfoList = context.packageManager.queryIntentActivities(dialingIntent, 0)
+            if (resolveInfoList.size == 1) {
+                return resolveInfoList[0].activityInfo.applicationInfo.packageName
+            }
+            resolveInfoList.forEach {
+                if (it.isDefault) {
+                    return it.activityInfo.applicationInfo.packageName
+                }
+            }
+            return resolveInfoList[0].activityInfo.applicationInfo.packageName
+        }
+
+        fun getPackageForIntent(context: Context, intent: Intent): String {
+            val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
+            if (resolveInfoList.size == 1) {
+                return resolveInfoList[0].activityInfo.applicationInfo.packageName
+            }
+            resolveInfoList.forEach {
+                if (it.isDefault) {
+                    return it.activityInfo.applicationInfo.packageName
+                }
+            }
+            return resolveInfoList[0].activityInfo.applicationInfo.packageName
+        }
+
+        fun getDefaultOrAllPackagesForIntent(context: Context, intent: Intent): List<String> {
+            val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
+            val defaultApp = resolveInfoList.filter {
+                it.isDefault
+            }.map {
+                it.activityInfo.applicationInfo.packageName
+            }
+            if (defaultApp.isEmpty()) {
+                return resolveInfoList.map {
+                    it.activityInfo.applicationInfo.packageName
+                }
+            } else {
+                return defaultApp
+            }
+        }
+
 
         fun getDialerAppInfo(context: Context): AppDrawerInfo? {
             return getAppInfoPkgName(
@@ -117,8 +227,8 @@ class Utils {
                 )
                 return AppDrawerInfo(appInfo, true)
             } catch (e: PackageManager.NameNotFoundException) {
-                return null
             }
+            return null
 
         }
 
@@ -134,6 +244,7 @@ class Utils {
             } else {
                 TODO("VERSION.SDK_INT < N")
             }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent);
 
         }
@@ -200,7 +311,7 @@ class Utils {
         fun getSelectedDays(context: Context): List<Int>? {
             val json = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).getString(
                 SELECTED_DAYS, null
-            )
+            ) ?: return null
             val list: List<Double> = GsonUtils.deserializeJSON(
                 json,
                 List::class.java
@@ -234,7 +345,7 @@ class Utils {
         }
 
         fun getFocusProgress(context: Context): Double {
-            if (!isDaySelected(context)){
+            if (!isDaySelected(context)) {
                 return 100.0
             }
             val currentTime = Calendar.getInstance().time
@@ -302,7 +413,7 @@ class Utils {
         }
 
         fun isFocusHourSet(context: Context): Boolean {
-            if(isDaySelected(context)){
+            if (!isDaySelected(context)) {
                 return false
             }
             val sp = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
@@ -323,5 +434,26 @@ class Utils {
             return true
         }
 
+        fun isUsagePermissionGranted(context: Context): Boolean {
+            val appOps =
+                context.applicationContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            val mode = appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(), context.packageName
+            )
+            return mode == AppOpsManager.MODE_ALLOWED
+        }
+
+        fun saveRemindMeOption(context: Context, remind: Boolean) {
+            context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).edit {
+                putBoolean(REMIND_ME, remind)
+            }
+        }
+
+        fun getRemindMeOption(context: Context): Boolean {
+            return context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+                .getBoolean(REMIND_ME, false)
+        }
     }
+
 }
