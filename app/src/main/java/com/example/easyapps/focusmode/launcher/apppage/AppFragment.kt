@@ -43,7 +43,8 @@ class AppFragment : BottomSheetDialogFragment() {
         val dialog: BottomSheetDialog =
             super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.behavior.peekHeight = resources.getDimensionPixelSize(R.dimen.peek_height)
-        dialog.behavior.isFitToContents()
+        dialog.behavior.setExpandedOffset(resources.getDimensionPixelOffset(R.dimen.expanded_offset))
+        dialog.behavior.isFitToContents = false
         dialog.dismissWithAnimation = true
         return dialog
     }

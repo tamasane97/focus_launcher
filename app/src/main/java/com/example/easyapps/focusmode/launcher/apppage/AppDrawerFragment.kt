@@ -30,13 +30,9 @@ class AppDrawerFragment : Fragment() {
     }
 
     companion object {
-        fun createAppDrawer(): Fragment{
+        fun createAppDrawer(): Fragment {
             return AppDrawerFragment()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -52,6 +48,8 @@ class AppDrawerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<View>(R.id.root)
             .setBackgroundColor(resources.getColor(android.R.color.transparent, null))
+        view.findViewById<View>(R.id.root)
+            .setPadding(0, resources.getDimensionPixelOffset(R.dimen.padding_top), 0, 0)
         initView(view)
     }
 

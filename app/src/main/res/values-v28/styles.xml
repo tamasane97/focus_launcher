@@ -12,9 +12,9 @@
         <item name="android:windowShowWallpaper">true</item>
     </style>
 
-    <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="FullScreenDialogStyle" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>

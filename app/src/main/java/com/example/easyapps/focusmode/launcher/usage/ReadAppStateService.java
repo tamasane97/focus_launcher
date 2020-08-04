@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.text.format.DateUtils;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.easyapps.focusmode.launcher.AppDrawerInfo;
 import com.example.easyapps.focusmode.launcher.LauncherActivity;
@@ -20,14 +19,11 @@ import com.example.easyapps.focusmode.launcher.R;
 import com.example.easyapps.focusmode.launcher.utils.FocusUtil;
 import com.example.easyapps.focusmode.launcher.utils.Utils;
 
-import static androidx.core.app.NotificationCompat.DEFAULT_SOUND;
-import static androidx.core.app.NotificationCompat.DEFAULT_VIBRATE;
-
 public class ReadAppStateService extends Service {
 
 
     private boolean isServiceForeground;
-    private Handler localHandler;
+    private Handler localHandler = new Handler();
 
     public ReadAppStateService() {
     }
@@ -35,7 +31,6 @@ public class ReadAppStateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startMonitoring();
     }
 
     @Override
@@ -48,14 +43,16 @@ public class ReadAppStateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.getBooleanExtra("Notification", false)) {
             FocusUtil.INSTANCE.clearReminderNotification(this);
-            startMonitoring();
+            Utils.Companion.addExceptionPackage(
+                    this,
+                    intent.getStringExtra(Utils.PACKAGE_NAME));
         }
+        startMonitoring();
         return START_NOT_STICKY;
     }
 
     private void startMonitoring() {
         if (Utils.Companion.getFocusProgress(this) < 100.0) {
-            localHandler = new Handler();
             localHandler.postDelayed(runnable, DateUtils.SECOND_IN_MILLIS);
         } else {
             FocusUtil.INSTANCE.setAlarmForFocusHours(this);
@@ -82,7 +79,7 @@ public class ReadAppStateService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();
 
-        startForeground(10, notification);
+        startForeground(FocusUtil.INSTANCE.getREMIND_FOCUS_NOT_ID(), notification);
         isServiceForeground = true;
     }
 
@@ -105,24 +102,25 @@ public class ReadAppStateService extends Service {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (Utils.Companion.getFocusProgress(ReadAppStateService.this) < 100.0) {
+                stopSelf();
+                return;
+            }
             String openedAppPackage = FocusUtil.INSTANCE.getRecentOpenedApp(ReadAppStateService.this);
-            if (openedAppPackage == null) {
+            long time = 5 * DateUtils.SECOND_IN_MILLIS;
+            if (!isServiceForeground) {
+                makeServiceForeground();
+            }
+            if (openedAppPackage == null || !Utils.Companion.hasLauncherIntent(ReadAppStateService.this, openedAppPackage)) {
+                localHandler.postDelayed(this, time);
                 return;
             }
             AppDrawerInfo appDrawerInfo = Utils.Companion.getAppInfoPkgName(ReadAppStateService.this, openedAppPackage);
             if (appDrawerInfo != null && !Utils.Companion.getExhaustiveSelectedApps(ReadAppStateService.this).contains(appDrawerInfo)) {
-                if (isServiceForeground) {
-                    stopForeground(true);
-                    stopSelf();
-                }
-                FocusUtil.INSTANCE.showNotification(ReadAppStateService.this);
-
-            } else {
-                if (!isServiceForeground) {
-                    makeServiceForeground();
-                }
-                localHandler.postDelayed(this, 5 * DateUtils.SECOND_IN_MILLIS);
+                FocusUtil.INSTANCE.updateNotification(ReadAppStateService.this, appDrawerInfo.getAppInfo().getPackageName());
+                time = DateUtils.MINUTE_IN_MILLIS;
             }
+            localHandler.postDelayed(this,time);
         }
     };
 

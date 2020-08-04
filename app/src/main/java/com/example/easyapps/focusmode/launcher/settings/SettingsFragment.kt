@@ -25,6 +25,9 @@ class SettingsFragment : Fragment() {
 
     private lateinit var interaction: Interaction
     private val REQ_CODE = 100;
+    private lateinit var remindFocus:Switch
+    private lateinit var dozeMode:Switch
+
     private val sharedVm: AppInfoViewModel by activityViewModels {
         AppInfoVMFactory(activity!!.application)
     }
@@ -76,6 +79,7 @@ class SettingsFragment : Fragment() {
             setFocusTime(view)
         }
 
+
         view.findViewById<TextView>(R.id.start_time).setOnClickListener {
             openTimePicker(true)
         }
@@ -84,17 +88,29 @@ class SettingsFragment : Fragment() {
             openTimePicker(false)
         }
 
-        val remindFocus = view.findViewById<Switch>(R.id.remind_focus_lost)
-        remindFocus.isChecked = Utils.getRemindMeOption(view.context)
+        remindFocus = view.findViewById<Switch>(R.id.remind_focus_lost)
 
+        dozeMode = view.findViewById<Switch>(R.id.dnd)
+
+        remindFocus.isChecked = Utils.getRemindMeOption(context!!)
 
         remindFocus.setOnCheckedChangeListener { compoundButton: CompoundButton, checked: Boolean ->
             if (checked && !Utils.isUsagePermissionGranted(view.context)) {
                 val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivityForResult(intent, REQ_CODE)
+                startActivity(intent)
             }
             Utils.saveRemindMeOption(view.context, checked)
+        }
+
+        dozeMode.isChecked = Utils.getDndOption(context!!)
+
+        dozeMode.setOnCheckedChangeListener{ compoundButton: CompoundButton, b: Boolean ->
+            if (b && !Utils.isNotificationListenerPermissionGranted(view.context.applicationContext)) {
+                val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+                startActivity(intent)
+            }
+            Utils.saveDndOption(view.context, b)
         }
 
         val daypicker = view.findViewById<MaterialDayPicker>(R.id.day_picker);
@@ -105,11 +121,10 @@ class SettingsFragment : Fragment() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_CODE && !Utils.isUsagePermissionGranted(activity!!.applicationContext)) {
-
-        }
+    override fun onStart() {
+        super.onStart()
+        remindFocus.isChecked = remindFocus.isChecked && Utils.isUsagePermissionGranted(context!!.applicationContext)
+        dozeMode.isChecked = dozeMode.isChecked && Utils.isNotificationListenerPermissionGranted(context!!.applicationContext)
     }
 
     private fun setFocusTime(view: View) {

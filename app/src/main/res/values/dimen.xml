@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="peek_height">300dp</dimen>
+    <dimen name="expanded_offset">100dp</dimen>
+    <dimen name="padding_top">56dp</dimen>
 </resources>

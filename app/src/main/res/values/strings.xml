@@ -8,7 +8,10 @@
     <string name="system_settings">Device Settings</string>
     <string name="App_Drawer">App Drawer</string>
     <string name="Focus_time">Focus Time</string>
-    <string name="focus_lost">Remind me Lost Focus</string>
+    <string name="focus_lost">Remind if focus lost</string>
+    <string name="dnd">Block Notifications</string>
+    <string name="focus_lost_detail">shows reminder if you opened a non-focus app (requires enabling permission)</string>
+    <string name="dnd_detail">Block notifications from non-focus apps (requires enabling permission)</string>
     <string name="choose_time">Choose your Focus Time</string>
     <string name="done">Done</string>
     <string name="Start">Start</string>
@@ -20,5 +23,6 @@
     <string name="focus_message">You are in focus hours for the day. It\'s good to be focused at this time ?</string>
     <string name="snooze">snooze</string>
     <string name="always_allow_this_app">Always Allow this app</string>
+    <string name="service_name">Focus Mode</string>
 
 </resources>

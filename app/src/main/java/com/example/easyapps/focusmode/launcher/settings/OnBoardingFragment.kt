@@ -56,7 +56,7 @@ class OnBoardingFragment : Fragment() {
         }
         view.findViewById<TextView>(R.id.done).setOnClickListener{
             Utils.saveSelectedDays(view.context,view.findViewById<MaterialDayPicker>(R.id.day_picker).selectedDays)
-            interaction.openLauncherWithDrawer()
+            interaction.onOnBoardingFinished()
         }
         setFocusTime(view)
     }
@@ -85,7 +85,7 @@ class OnBoardingFragment : Fragment() {
     }
 
     interface Interaction {
-        fun openLauncherWithDrawer()
+        fun onOnBoardingFinished()
     }
 
 }

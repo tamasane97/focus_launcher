@@ -5,31 +5,41 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.text.format.DateUtils
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.easyapps.focusmode.launcher.LauncherActivity
 import com.example.easyapps.focusmode.launcher.R
 import com.example.easyapps.focusmode.launcher.usage.ReadAppStateService
 
+private val PACKAGE_UNCHANGED = "NO_CHANGE"
+
 object FocusUtil {
     @SuppressLint("WrongConstant")
     public fun getRecentOpenedApp(context: Context): String? {
         val endTime = System.currentTimeMillis()
+        val diff = endTime - 2*DateUtils.MINUTE_IN_MILLIS
         var lastTimeUsed: Long = -1
         val startTime = System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS
         var recentPackageName: String? = null
         val usageStatsManager =
             context.applicationContext.getSystemService("usagestats") as UsageStatsManager
+        val usageEvents = usageStatsManager.queryEvents(diff, endTime)
+        val movedToforeground = getMovedToForegroundApps(usageEvents)
         val queryUsageStats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
             startTime,
             endTime
         )
+        /*if(!usageEvents.hasNextEvent()){
+            return PACKAGE_UNCHANGED
+        }*/
         for (usageStats in queryUsageStats) {
             if (usageStats == null || usageStats.packageName.isNullOrEmpty()) {
                 continue
@@ -37,7 +47,7 @@ object FocusUtil {
             if (usageStats.firstTimeStamp < startTime) {
                 continue
             }
-            if (lastTimeUsed < usageStats.lastTimeUsed) {
+            if (lastTimeUsed < usageStats.lastTimeUsed && movedToforeground.contains(usageStats.packageName)) {
                 lastTimeUsed = usageStats.lastTimeUsed
                 recentPackageName = usageStats.packageName
             }
@@ -55,38 +65,35 @@ object FocusUtil {
 
     private val REMIND_FOCUS_CHANNEL_ID = "channel_remind"
 
-    private val REMIND_FOCUS_NOT_ID = 11
+    val REMIND_FOCUS_NOT_ID = 11
 
     /**
      * @param usageStatsManager
      * @param diff
      * @return
-     *//*
-    fun crossCheckForeGroundApp(usageStatsManager: UsageStatsManager, diff: Long): String? {
-        var diff = diff
-        val time = System.currentTimeMillis()
-        var packageName: String? = null
-        diff -= 1 * DateUtils.SECOND_IN_MILLIS
-        val usageEvents = usageStatsManager.queryEvents(diff, time)
+     */
+    fun getMovedToForegroundApps(usageEvents: UsageEvents): List<String> {
         val event = UsageEvents.Event()
-        // get last foreground event so that we can get last app in foreground
+        val list = arrayListOf<String>()
         while (usageEvents.hasNextEvent()) {
             usageEvents.getNextEvent(event)
-            if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND || event.eventType == UsageEvents.Event.USER_INTERACTION) {
-                packageName = event.packageName
+            if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                list.add(event.packageName)
             }
         }
-        return packageName
-    }*/
+        return list
+    }
 
-    fun showNotification(context: Context) {
+    fun updateNotification(context: Context, packageName: String) {
         val notificationIntent = Intent(context, LauncherActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
 
         val dismissIntent = PendingIntent.getService(
             context,
             0,
-            Intent(context, ReadAppStateService::class.java).putExtra("Notification", true),
+            Intent(context, ReadAppStateService::class.java)
+                .putExtra("Notification", true)
+                .putExtra(Utils.PACKAGE_NAME, packageName),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -129,7 +136,6 @@ object FocusUtil {
             val channel = NotificationChannel(channelid, channelName, importance)
             channel.description = description
             channel.enableVibration(true)
-            channel.enableLights(true)
             val v = longArrayOf(1000, 1000, 1000, 1000, 1000)
             channel.vibrationPattern = v
             // Register the channel with the system; you can't change the importance

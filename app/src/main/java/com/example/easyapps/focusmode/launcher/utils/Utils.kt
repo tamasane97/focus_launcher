@@ -1,5 +1,6 @@
 package com.example.easyapps.focusmode.launcher.utils
 
+import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -8,11 +9,15 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS
 import android.provider.Settings
+import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.example.easyapps.focusmode.launcher.AppDrawerInfo
 import com.example.easyapps.focusmode.launcher.AppInfo
 import java.util.*
 import kotlin.collections.LinkedHashSet
+import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
 
 
 class Utils {
@@ -29,6 +34,7 @@ class Utils {
         private const val SELECTED_DAYS = "selecteddays"
         private const val RUN_COUNT = "run"
         private const val REMIND_ME = "remind_me"
+        private const val Dnd = "dnd"
         const val PACKAGE_NAME = "package_name"
 
 
@@ -74,13 +80,7 @@ class Utils {
                     SELECTED_APPS, null
                 ) ?: return linkedSetOf()
 
-            packageset.remove(
-                getDialer(
-                    context
-                )
-            )
-            packageset.remove(getSettings(context))
-            packageset.remove(context.packageName)
+            packageset.removeAll(getExceptionList(context))
             val list = packageset.mapNotNull {
                 getAppInfoPkgName(
                     context,
@@ -453,6 +453,30 @@ class Utils {
         fun getRemindMeOption(context: Context): Boolean {
             return context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
                 .getBoolean(REMIND_ME, false)
+        }
+
+        fun saveDndOption(context: Context, remind: Boolean) {
+            context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE).edit {
+                putBoolean(Dnd, remind)
+            }
+        }
+
+        fun getDndOption(context: Context): Boolean {
+            return context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+                .getBoolean(Dnd, false)
+        }
+
+        fun hasLauncherIntent(context: Context, packageName: String): Boolean {
+            val intent =
+                context.applicationContext.packageManager.getLaunchIntentForPackage(packageName)
+            if (intent == null || !intent.hasCategory(Intent.CATEGORY_LAUNCHER)) {
+                return false
+            }
+            return true
+        }
+
+        fun isNotificationListenerPermissionGranted(applicationContext: Context): Boolean {
+            return NotificationManagerCompat.getEnabledListenerPackages(applicationContext).contains(applicationContext.packageName)
         }
     }
 

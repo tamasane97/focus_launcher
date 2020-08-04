@@ -2,15 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingStart="26dp"
-    android:paddingTop="26dp"
+    android:paddingStart="20dp"
+    android:paddingBottom="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="50dp"
+    android:background="@color/black_30"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="22sp"
         android:text="@string/choose_time" />
 
@@ -29,18 +32,17 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="6dp"
-            android:background="@color/black_30"
+            android:background="@color/white_30"
             android:layout_height="48dp"/>
 
         <TextView
             android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="3dp"
-            android:paddingBottom="8dp"
             android:text="@string/Start"
+            android:padding="8dp"
             android:layout_toStartOf="@id/divider"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <TextView
@@ -48,9 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/start"
-            android:layout_alignStart="@id/start"
-            android:paddingBottom="8dp"
-            android:textColor="@android:color/black"
+            android:layout_alignEnd="@id/start"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             tools:text="10:00" />
 
@@ -60,10 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/start"
             android:layout_toEndOf="@id/divider"
-            android:paddingStart="3dp"
-            android:paddingBottom="8dp"
+            android:padding="8dp"
             android:text="@string/End"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <TextView
@@ -72,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@id/end"
             android:layout_alignTop="@id/start_time"
-            android:paddingBottom="8dp"
-            android:textColor="@android:color/black"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             tools:text="19:00" />
 
@@ -94,9 +95,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="36dp"
         android:padding="8dp"
-        android:textColor="@android:color/black"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@android:color/white"
         android:textSize="22sp"
-        android:background="@drawable/ripple_bg"
+        android:background="@drawable/ripple_bg_transparent"
         android:text="@string/done" />
 
 

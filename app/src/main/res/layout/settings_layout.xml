@@ -3,173 +3,227 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="16dp"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:background="@color/black_70"
+    android:paddingStart="16dp"
+    android:paddingTop="56dp"
+    android:paddingEnd="16dp">
 
-    <TextView
-        android:id="@+id/settings_header"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/settings"
-        android:textColor="@android:color/white"
-        android:textSize="22sp" />
+        android:layout_height="wrap_content">
 
 
-    <TextView
-        android:id="@+id/app_drawer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/settings_header"
-        android:background="@drawable/ripple_bg_transparent"
-        android:drawableLeft="@drawable/ic_apps_black_24dp"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="@string/App_Drawer"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/make_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/app_drawer"
-        android:background="@drawable/ripple_bg_transparent"
-        android:drawableLeft="@drawable/ic_launch_black_24dp"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="@string/default_launcher"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/system_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/make_default"
-        android:background="@drawable/ripple_bg_transparent"
-        android:drawableLeft="@drawable/ic_settings_app"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="@string/system_settings"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/setup_focus_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/system_settings"
-        android:background="@drawable/ripple_bg_transparent"
-        android:drawableLeft="@drawable/ic_focus"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="@string/Focus_time"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-
-    <RelativeLayout
-        android:id="@+id/setup_focus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/setup_focus_time"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/ripple_bg_transparent"
-            android:fontFamily="sans-serif-medium"
-            android:paddingStart="3dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:text="@string/Start"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/start_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/start"
-            android:layout_alignStart="@id/start"
-            android:background="@drawable/ripple_bg_transparent"
-            android:fontFamily="sans-serif-medium"
-            android:paddingBottom="8dp"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            tools:text="10:00" />
-
-        <TextView
-            android:id="@+id/end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/start"
-            android:layout_marginStart="56dp"
-            android:layout_toEndOf="@id/start"
-            android:background="@drawable/ripple_bg_transparent"
-            android:fontFamily="sans-serif-medium"
-            android:paddingStart="3dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:text="@string/End"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/end_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/end"
-            android:layout_alignTop="@id/start_time"
-            android:background="@drawable/ripple_bg_transparent"
-            android:fontFamily="sans-serif-medium"
-            android:paddingBottom="8dp"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            tools:text="19:00" />
-
-
-        <ca.antonious.materialdaypicker.MaterialDayPicker
-            android:id="@+id/day_picker"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/end_time"
-            android:layout_marginTop="16dp" />
-    </RelativeLayout>
+            android:layout_height="wrap_content">
 
-    <Switch
-        android:id="@+id/remind_focus_lost"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/setup_focus"
-        android:background="@drawable/ripple_bg_transparent"
-        android:drawableLeft="@drawable/ic_focus"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="@string/focus_lost"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/settings_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/settings"
+                android:textColor="@android:color/white"
+                android:textSize="22sp" />
 
+
+            <TextView
+                android:id="@+id/app_drawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settings_header"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_apps_black_24dp"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/App_Drawer"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/make_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/app_drawer"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_launch_black_24dp"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/default_launcher"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/system_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/make_default"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_settings_app"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/system_settings"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/setup_focus_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/system_settings"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_center_focus"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/Focus_time"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+
+            <RelativeLayout
+                android:id="@+id/setup_focus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setup_focus_time"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:background="@drawable/ripple_bg_transparent"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="3dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/Start"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/start"
+                    android:layout_alignStart="@id/start"
+                    android:background="@drawable/ripple_bg_transparent"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    tools:text="10:00" />
+
+                <TextView
+                    android:id="@+id/end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/start"
+                    android:layout_marginStart="56dp"
+                    android:layout_toEndOf="@id/start"
+                    android:background="@drawable/ripple_bg_transparent"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="3dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/End"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/end"
+                    android:layout_alignTop="@id/start_time"
+                    android:background="@drawable/ripple_bg_transparent"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    tools:text="19:00" />
+
+
+                <ca.antonious.materialdaypicker.MaterialDayPicker
+                    android:id="@+id/day_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/end_time"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp" />
+            </RelativeLayout>
+
+            <Switch
+                android:id="@+id/remind_focus_lost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setup_focus"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_focus"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:text="@string/focus_lost"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/lost_focus_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="58dp"
+                android:layout_alignStart="@id/remind_focus_lost"
+                android:layout_below="@id/remind_focus_lost"
+                android:text="@string/focus_lost_detail"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                />
+
+            <Switch
+                android:id="@+id/dnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lost_focus_details"
+                android:background="@drawable/ripple_bg_transparent"
+                android:drawableStart="@drawable/ic_do_not_disturb"
+                android:drawablePadding="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingTop="12dp"
+                android:text="@string/dnd"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/dnd_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="58dp"
+                android:layout_alignStart="@id/dnd"
+                android:layout_below="@id/dnd"
+                android:text="@string/dnd_detail"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                />
+
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

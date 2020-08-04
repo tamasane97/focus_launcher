@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.CountDownTimer
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.*
 import com.example.easyapps.focusmode.launcher.AppDrawerInfo
 import com.example.easyapps.focusmode.launcher.utils.Utils
@@ -20,7 +21,7 @@ class AppInfoViewModel(val application: Application) : ViewModel() {
                     )
                 )
             }
-            Handler().post(runnable);
+            Handler(Looper.getMainLooper()).post(runnable);
         }
     }
 

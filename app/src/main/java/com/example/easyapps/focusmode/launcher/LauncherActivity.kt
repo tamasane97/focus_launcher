@@ -14,6 +14,15 @@ import com.example.easyapps.focusmode.launcher.utils.FocusUtil
 import com.example.easyapps.focusmode.launcher.utils.Utils
 import com.example.easyapps.focusmode.launcher.viewModel.AppInfoVMFactory
 import com.example.easyapps.focusmode.launcher.viewModel.AppInfoViewModel
+import android.os.BatteryManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import android.view.View
+import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -25,6 +34,15 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
     private val appInfoViewModel: AppInfoViewModel by viewModels {
         AppInfoVMFactory(application)
     }
+    private lateinit var battery: TextView
+    private val batteryDrawable = arrayOf(
+        R.drawable.ic_battery_20_black_24dp,
+        R.drawable.ic_battery_50_black_24dp,
+        R.drawable.ic_battery_60_black_24dp,
+        R.drawable.ic_battery_80_black_24dp,
+        R.drawable.ic_battery_90_black_24dp,
+        R.drawable.ic_battery_full_black_24dp
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +53,27 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
         } else {
             appInfoViewModel.startTicking()
             addLauncherFragment()
+        }
+        battery = findViewById(R.id.status_bar);
+        registerReceiver(this.mBatInfoReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        registerWindowInset();
+    }
+
+    private fun registerWindowInset() {
+        val view = findViewById<View>(R.id.content_holder)
+        ViewCompat.setOnApplyWindowInsetsListener(view)
+        { v, insets ->
+            v.updatePadding(bottom = insets.systemWindowInsets.bottom)
+            // Return the insets so that they keep going down the view hierarchy
+            insets
+        }
+    }
+
+    private val mBatInfoReceiver = object : BroadcastReceiver() {
+        override fun onReceive(ctxt: Context, intent: Intent) {
+            val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0)
+            battery.text = "$level%"
+            battery.setCompoundDrawablesWithIntrinsicBounds(batteryDrawable[level/20],0,0,0)
         }
     }
 
@@ -60,7 +99,7 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
         }
     }
 
-    override fun openLauncherWithDrawer() {
+    override fun onOnBoardingFinished() {
         addLauncherFragment()
         openAppDrawerForSelection()
     }
@@ -80,7 +119,7 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
         onLauncherStarted()
     }
 
-    fun onLauncherStarted() {
+    private fun onLauncherStarted() {
         stopService(Intent(this, ReadAppStateService::class.java))
         FocusUtil.clearReminderNotification(this)
     }
@@ -103,4 +142,10 @@ class LauncherActivity : AppCompatActivity(), HomeFragment.Interaction,
             addToBackStack(null)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(mBatInfoReceiver)
+    }
+
 }
